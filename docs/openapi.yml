@@ -1,0 +1,1992 @@
+openapi: 3.0.0
+info:
+  title: Collection
+  version: 1.0.0
+servers:
+  - url: http://{{apipartnersbaseurl}}
+  - url: http://{{sandboxbaseurl}}
+  - url: https://cdpj.partners.bancointer.com.br
+  - url: https://cdpj-sandbox.partners.uatinter.co
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    noauthAuth:
+      type: http
+      scheme: noauth
+tags:
+  - name: PRODUÇÃO
+  - name: PRODUÇÃO > API Cobranca (Boleto com Pix)
+  - name: PRODUÇÃO > API Cobranca (Boleto com Pix) > Cobranças
+  - name: PRODUÇÃO > API Cobranca (Boleto com Pix) > WebHook
+  - name: PRODUÇÃO > API Banking
+  - name: PRODUÇÃO > API Banking > Extrato
+  - name: PRODUÇÃO > API Banking > Saldo
+  - name: PRODUÇÃO > API Banking > Pagamento
+  - name: PRODUÇÃO > API Banking > Pix Pagamento
+  - name: PRODUÇÃO > API Banking > Webhook
+  - name: PRODUÇÃO > API Pix
+  - name: PRODUÇÃO > API Pix > Cobrança imediata
+  - name: PRODUÇÃO > API Pix > Cobrancas com Vencimento
+  - name: PRODUÇÃO > API Pix > Lote Cobrancas com Vencimento
+  - name: PRODUÇÃO > API Pix > Payload Location
+  - name: PRODUÇÃO > API Pix > Pix
+  - name: PRODUÇÃO > API Pix > Webhook
+  - name: SANDBOX
+  - name: SANDBOX > SANDBOX - API Cobranca (Boleto com Pix)
+  - name: SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > Cobranças
+  - name: SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > WebHook
+  - name: SANDBOX > SANDBOX - API Banking
+  - name: SANDBOX > SANDBOX - API Banking > Extrato
+  - name: SANDBOX > SANDBOX - API Banking > Saldo
+  - name: SANDBOX > SANDBOX - API Banking > Pagamento
+  - name: SANDBOX > SANDBOX - API Banking > Webhook
+  - name: SANDBOX > SANDBOX - API Pix
+  - name: SANDBOX > SANDBOX - API Pix > Cobrança imediata
+  - name: SANDBOX > SANDBOX - API Pix > Cobrancas com Vencimento
+  - name: SANDBOX > SANDBOX - API Pix > Payload Location
+  - name: SANDBOX > SANDBOX - API Pix > Pix
+  - name: SANDBOX > SANDBOX - API Pix > Webhook
+paths:
+  /cobranca/v3/cobrancas:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > Cobranças
+      summary: Recuperar coleção de cobranças
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataInicial
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01'
+        - name: dataFinal
+          in: query
+          schema:
+            type: string
+          example: '2024-10-31'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > Cobranças
+      summary: Emitir cobrança
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                valorNominal: '100.50'
+                seuNumero: recebimento-pix
+                dataVencimento: '2025-10-11'
+                numDiasAgenda: '30'
+                pagador:
+                  cpfCnpj: '08951851648'
+                  tipoPessoa: FISICA
+                  nome: Nome
+                  endereco: Rua São Paulo
+                  cidade: Belo Horizonte
+                  uf: MG
+                  cep: '36401042'
+                  bairro: Jardim América
+                multa:
+                  codigo: PERCENTUAL
+                  taxa: '0.10'
+                mora:
+                  codigo: TAXAMENSAL
+                  taxa: '0.21'
+                desconto:
+                  quantidadeDias: 1
+                  taxa: 0.3
+                  codigo: PERCENTUALDATAINFORMADA
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /cobranca/v3/cobrancas/{codigoSolicitacao}:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > Cobranças
+      summary: Recuperar cobrança
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: codigoSolicitacao
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 6f8d70ea-1724-4340-9a4c-2eb0150b0b5d
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /cobranca/v3/cobrancas/{codigoSolicitacao}/pdf:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > Cobranças
+      summary: Recuperar cobrança em PDF
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: codigoSolicitacao
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 6f8d70ea-1724-4340-9a4c-2eb0150b0b5d
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /cobranca/v3/cobrancas/{codigoSolicitacao}/cancelar:
+    post:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > Cobranças
+      summary: Cancelar cobrança
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                motivoCancelamento: motivo cancelamento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: codigoSolicitacao
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 6f8d70ea-1724-4340-9a4c-2eb0150b0b5d
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /cobranca/v3/cobrancas/sumario:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > Cobranças
+      summary: Recuperar sumário de cobranças
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataInicial
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01'
+        - name: dataFinal
+          in: query
+          schema:
+            type: string
+          example: '2024-10-31'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /cobranca/v3/cobrancas/webhook:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > WebHook
+      summary: Obter webhook cadastrado
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > WebHook
+      summary: Excluir webhook
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > WebHook
+      summary: Criar ou editar um webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                webhookUrl: https://cobranca.example.com/api/webhook
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /cobranca/v3/cobrancas/webhook/callbacks:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > WebHook
+      summary: Consulta de callbacks enviados
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataHoraInicio
+          in: query
+          schema:
+            type: string
+          example: 2024-10-04T16:00Z
+        - name: dataHoraFim
+          in: query
+          schema:
+            type: string
+          example: 2024-10-31T13:00Z
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/extrato:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Extrato
+      summary: Consultar extrato
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataInicio
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01'
+        - name: dataFim
+          in: query
+          schema:
+            type: string
+          example: '2024-10-31'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/extrato/exportar:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Extrato
+      summary: Recuperar extrato em PDF
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataInicio
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01'
+        - name: dataFim
+          in: query
+          schema:
+            type: string
+          example: '2024-10-31'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/extrato/completo:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Extrato
+      summary: Consultar extrato enriquecido
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataInicio
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01'
+        - name: dataFim
+          in: query
+          schema:
+            type: string
+          example: '2024-10-31'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/saldo:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Saldo
+      summary: Consultar saldo
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataSaldo
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/pagamento:
+    post:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Pagamento
+      summary: Incluir pagamento com código de barras
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                codBarraLinhaDigitavel: '11111111111111111111111111111111111111111111'
+                valorPagar: '65.33'
+                dataVencimento: '2024-10-31'
+                dataPagamento: '2024-10-27'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Pagamento
+      summary: Buscar pagamentos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataInicio
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01'
+        - name: dataFim
+          in: query
+          schema:
+            type: string
+          example: '2024-10-31'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/pagamento/darf:
+    post:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Pagamento
+      summary: Incluir pagamento de DARF
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                cnpjCpf: '89983642042'
+                codigoReceita: '0191'
+                dataPagamento: '2024-08-25'
+                dataVencimento: '2025-06-22'
+                descricao: Pagamento DARF Janeiro
+                nomeEmpresa: Minha Empresa2
+                periodoApuracao: '2022-06-06'
+                referencia: '0319999111111231313'
+                telefoneEmpresa: '0319999111111231313'
+                valorJuros: 10.11
+                valorMulta: 27.48
+                valorPrincipal: 50.15
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Pagamento
+      summary: Buscar pagamentos de DARF
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataInicio
+          in: query
+          schema:
+            type: string
+          example: '2024-07-01'
+        - name: dataFim
+          in: query
+          schema:
+            type: string
+          example: '2024-10-31'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/pagamento/lote:
+    post:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Pagamento
+      summary: Incluir pagamentos em lote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                meuIdentificador: Lote 2
+                pagamentos:
+                  - tipoPagamento: DARF
+                    nomeEmpresa: nomeEmpresa
+                    periodoApuracao: '2024-07-09'
+                    valorPrincipal: 10
+                    dataPagamento: '2024-07-09'
+                    descricao: descricao
+                    codigoReceita: '1234'
+                    dataVencimento: '2024-07-09'
+                    referencia: '555555'
+                    nroContaDebito: '8579377'
+                    cnpjCpf: '12345678912'
+                  - codBarraLinhaDigitavel: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                    tipoPagamento: BOLETO
+                    dataVencimento: '2024-05-23'
+                    dataPagamento: '2024-10-30'
+                    valorPagar: 93.65
+                    valorNominal: 93.65
+                  - codBarraLinhaDigitavel: '11111111111111111111111111111111111111111111'
+                    tipoPagamento: BOLETO
+                    dataVencimento: '2024-10-23'
+                    dataPagamento: '2024-10-30'
+                    valorPagar: 93.65
+                    valorNominal: 93.65
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/pagamento/lote/{idLote}:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Pagamento
+      summary: Buscar lote de pagamentos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: idLote
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 670039b5e5835d4724caae0a
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/pagamento/{codigoTransacao}:
+    delete:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Pagamento
+      summary: Cancelar agendamento do pagamento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: codigoTransacao
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 3bce7115-a14f-4f68-a0a1-77f6d35d9a8b
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/pix:
+    post:
+      tags:
+        - PRODUÇÃO > API Banking > Pix Pagamento
+      summary: Incluir Pagamento Pix
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                valor: 1.23
+                dataPagamento: '2024-12-04'
+                descricao: Pix com código Copia e Cola
+                destinatario:
+                  tipo: PIX_COPIA_E_COLA
+                  pixCopiaECola: >-
+                    00020101021226930014BR.GOV.BCB.PIX2571spi-qrcode-h.bancointer.com.br/pj-h/v2/86ab9a7694d74b938489d21394bbef1452040000530398654042.005802BR5901*6013BELO
+                    HORIZONT61083019013162070503***63047AAA
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/pix/{codigoSolicitacao}:
+    get:
+      tags:
+        - PRODUÇÃO > API Banking > Pix Pagamento
+      summary: Consultar Pagamento Pix
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: codigoSolicitacao
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '123'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/webhooks/{tipoWebhook}:
+    put:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Webhook
+      summary: Configurar o Webhook Pix
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                webhookUrl: https://pix.example.com/api/webhook/
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: tipoWebhook
+          in: path
+          schema:
+            type: string
+          required: true
+          example: boleto-pagamento
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Webhook
+      summary: Obter webhook cadastrado
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: tipoWebhook
+          in: path
+          schema:
+            type: string
+          required: true
+          example: boleto-pagamento
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Webhook
+      summary: Cancelar o webhook Pix
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: tipoWebhook
+          in: path
+          schema:
+            type: string
+          required: true
+          example: boleto-pagamento
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /banking/v2/webhooks/{tipoWebhook}/callbacks:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Banking > Webhook
+      summary: Consultar callbacks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataHoraInicio
+          in: query
+          schema:
+            type: string
+          example: 2024-10-04T00:00Z
+        - name: dataHoraFim
+          in: query
+          schema:
+            type: string
+          example: 2024-10-31T00:00Z
+        - name: tipoWebhook
+          in: path
+          schema:
+            type: string
+          required: true
+          example: boleto-pagamento
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/cob:
+    post:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrança imediata
+      summary: Criar cobrança imediata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                chave: '{{chave}}'
+                solicitacaoPagador: solicitacaoPagador
+                devedor:
+                  cpf: '12345678910'
+                  nome: Empresa de Serviços SA
+                valor:
+                  original: '2.00'
+                  modalidadeAlteracao: 1
+                calendario:
+                  expiracao: 172800
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrança imediata
+      summary: Consultar lista de cobrancas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: inicio
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01T13:00:00Z'
+        - name: fim
+          in: query
+          schema:
+            type: string
+          example: '2024-10-10T00:00:00Z'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/cob/{txid}:
+    patch:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrança imediata
+      summary: Revisar cobrança imediata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                calendario:
+                  expiracao: '3600'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: txid
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 3yzpeh9fg9i9qnjmv5kol6s7b20qhifnuhx
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrança imediata
+      summary: Consultar cobrança imediata
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: txid
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 3yzpeh9fg9i9qnjmv5kol6s7b20qhifnuhx
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrança imediata
+      summary: Criar cobrança imediata com txid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                chave: '{{chave}}'
+                solicitacaoPagador: solicitacaoPagador
+                infoAdicionais:
+                  - nome: Campo 1
+                    valor: Informação Adicional1 do PSP-Recebedor
+                  - nome: Campo 2
+                    valor: Empresa de Serviços
+                devedor:
+                  cnpj: '48865366000150'
+                  nome: Empresa de Serviços SA
+                valor:
+                  original: '1.00'
+                  modalidadeAlteracao: 1
+                calendario:
+                  expiracao: 2
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: txid
+          in: path
+          schema:
+            type: string
+          required: true
+          example: '{{randomTxId}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/cobv:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrancas com Vencimento
+      summary: Consultar lista de cobrancas com vencimento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: inicio
+          in: query
+          schema:
+            type: string
+          description: Data incio
+          example: '2024-10-01T00:00:00Z'
+        - name: fim
+          in: query
+          schema:
+            type: string
+          description: Data fim
+          example: '2024-10-05T00:00:00Z'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/cobv/{txid}:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrancas com Vencimento
+      summary: Consultar cobrança com vencimento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: txid
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 3yzpeh9fg9i9qnjmv5kol6s7b20qhifnuhx
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrancas com Vencimento
+      summary: Revisar cobrança com vencimento
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                chave: '{{chave}}'
+                solicitacaoPagador: Serviço realizado.
+                infoAdicionais:
+                  - nome: quantidade
+                    valor: '2'
+                loc:
+                  id: 900541
+                devedor:
+                  nome: Empresa de Serviços SA
+                  cpf: '12345678910'
+                  email: usuario@pix.com.br
+                  cidade: São Paulo
+                  uf: SP
+                  cep: '70011750'
+                  logradouro: Alameda Souza, Numero 80, Bairro Braz
+                recebedor:
+                  nome: NOME-90252428000114
+                  cnpj: '90252428000114'
+                  cidade: Belo Horizonte
+                  uf: MG
+                  cep: '30575550'
+                  logradouro: JOAO CARNEIRO DE RESENDE 27 , Bairro PALMEIRAS
+                valor:
+                  original: '137.00'
+                  multa:
+                    modalidade: 1
+                    valorPerc: '0.01'
+                  juros:
+                    modalidade: 1
+                    valorPerc: '0.01'
+                  abatimento:
+                    modalidade: 1
+                    valorPerc: '0.01'
+                calendario:
+                  criacao: '2026-09-28T19:35:30.986Z'
+                  dataDeVencimento: '2026-07-20'
+                  validadeAposVencimento: 31
+                txid: '122222333333333333333333333'
+                revisao: 0
+                pix: []
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: txid
+          in: path
+          schema:
+            type: string
+          required: true
+          example: ekTdf6rTLUByphE2qWzOJtUez3R9mUMstGC
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Cobrancas com Vencimento
+      summary: Atualizar cobrança com vencimento
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                calendario:
+                  dataDeVencimento: '2026-10-30'
+                  validadeAposVencimento: 30
+                devedor:
+                  nome: Empresa de Serviços SA
+                  cpf: '12345678910'
+                  email: usuario@pix.com.br
+                  cidade: São Paulo
+                  uf: SP
+                  cep: '70011750'
+                  logradouro: Alameda Souza, Numero 80, Bairro Braz
+                valor:
+                  original: '0.01'
+                  multa:
+                    modalidade: 1
+                    valorPerc: '0.01'
+                chave: '90403518000169'
+                infoAdicionais:
+                  - nome: quantidade
+                    valor: '2'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: txid
+          in: path
+          schema:
+            type: string
+          required: true
+          example: '{{randomTxId}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/lotecobv/{id}:
+    put:
+      tags:
+        - PRODUÇÃO > API Pix > Lote Cobrancas com Vencimento
+      summary: Criar/Alterar lote de cobrança com vencimento
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                descricao: Lote de cobranças com vencimento
+                cobsv:
+                  - calendario:
+                      dataDeVencimento: '2026-12-31'
+                      validadeAposVencimento: 30
+                    txid: '{{randomTxId}}'
+                    devedor:
+                      logradouro: Alameda Souza, Numero 80, Bairro Braz
+                      cidade: Recife
+                      uf: PE
+                      cep: '70011750'
+                      cpf: '08577095428'
+                      nome: João Souza
+                    valor:
+                      original: '100.00'
+                    chave: '{{chave}}'
+                    solicitacaoPagador: Informar matrícula
+                  - calendario:
+                      dataDeVencimento: '2026-12-31'
+                      validadeAposVencimento: 30
+                    txid: '{{secondRandomTxId}}'
+                    devedor:
+                      logradouro: Rua 15, Numero 1, Bairro Campo Grande
+                      cidade: Recife
+                      uf: PE
+                      cep: '70055751'
+                      cpf: '15311295449'
+                      nome: Nome
+                    valor:
+                      original: '100.00'
+                    chave: 7c084cd4-54af-4172-a516-a7d1a12b75cc
+                    solicitacaoPagador: Informar matrícula
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1234567891'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - PRODUÇÃO > API Pix > Lote Cobrancas com Vencimento
+      summary: Revisar lote de cobrança com vencimento
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                cobsv:
+                  - calendario:
+                      dataDeVencimento: '2026-01-10'
+                    txid: dJdnmsgJ3F4M6YgkEPdG4a2XazAzq3IB37g
+                    valor:
+                      original: '110.00'
+                  - calendario:
+                      dataDeVencimento: '2027-01-12'
+                    txid: 8wGP7vjxiVY3wjUmLDfzeTqpHcU6GpvNtVv
+                    valor:
+                      original: '1199.00'
+                      multa:
+                        modalidade: '2'
+                        valorPerc: '15.00'
+                      abatimento:
+                        modalidade: '2'
+                        valorPerc: '10.00'
+                      juros:
+                        modalidade: '2'
+                        valorPerc: '12.12'
+                    devedor:
+                      logradouro: Rua 151, Numero 1, Bairro Campo Grande
+                      cidade: Sao Paulo
+                      uf: SP
+                      cep: '70055751'
+                      cpf: '15311295449'
+                      nome: Nome
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1234567891'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - PRODUÇÃO > API Pix > Lote Cobrancas com Vencimento
+      summary: Consultar lote cobrança com vencimento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1234567891'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/lotecobv/{id}/sumario:
+    get:
+      tags:
+        - PRODUÇÃO > API Pix > Lote Cobrancas com Vencimento
+      summary: Sumário de um lote de cobranças com vencimento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1234567891'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/lotecobv:
+    get:
+      tags:
+        - PRODUÇÃO > API Pix > Lote Cobrancas com Vencimento
+      summary: Consultar lista lotes de cobrancas com vencimento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: inicio
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01T00:00:00Z'
+        - name: fim
+          in: query
+          schema:
+            type: string
+          example: '2024-10-04T00:00:00Z'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/lotecobv/{id}/situacao/{situacao}:
+    get:
+      tags:
+        - PRODUÇÃO > API Pix > Lote Cobrancas com Vencimento
+      summary: Consultar cobranças de um lote por situação
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '123456789'
+        - name: situacao
+          in: path
+          schema:
+            type: string
+          required: true
+          example: EM_PROCESSAMENTO
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/loc:
+    post:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Payload Location
+      summary: Criar location do payload
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                tipoCob: cobv
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Payload Location
+      summary: Consultar locations cadastradas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: inicio
+          in: query
+          schema:
+            type: string
+          example: '2024-10-01T00:00:00Z'
+        - name: fim
+          in: query
+          schema:
+            type: string
+          example: '2024-10-30T00:00:00Z'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/loc/{id}:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Payload Location
+      summary: Recuperar location do payload
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1041316'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/loc/{id}/txid:
+    delete:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Payload Location
+      summary: Desvincular uma cobranca de uma location
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 8wGP7vjxiVY3wjUmLDfzeTqpHcU6GpvNtVv
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/pix/{e2eId}:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Pix
+      summary: Consultar Pix
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: e2eId
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '11111111111111111111111111111112'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/pix:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Pix
+      summary: Consultar Pix recebidos
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: inicio
+          in: query
+          schema:
+            type: number
+          example: '2024-10-01T00:00:00.000Z'
+        - name: fim
+          in: query
+          schema:
+            type: number
+          example: '2024-10-30T00:00:00.000Z'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/pix/{e2eid}/devolucao/{id}:
+    put:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Pix
+      summary: Solicitar devolução
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                valor: '7.89'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: e2eid
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '11111111111111111111111111111112'
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '123456789'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/webhook/{chave}:
+    put:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Webhook
+      summary: Configurar o Webhook Pix
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                webhookUrl: https://pix.example.com/api/webhook/
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: chave
+          in: path
+          schema:
+            type: string
+          required: true
+          example: '{{chave}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Webhook
+      summary: Obter webhook cadastrado
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: chave
+          in: path
+          schema:
+            type: string
+          required: true
+          example: '{{chave}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Webhook
+      summary: Cancelar o webhook Pix
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: chave
+          in: path
+          schema:
+            type: string
+          required: true
+          example: '{{chave}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /pix/v2/webhook/callbacks:
+    get:
+      tags:
+        - SANDBOX > SANDBOX - API Pix > Webhook
+      summary: Consultar callbacks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: dataHoraInicio
+          in: query
+          schema:
+            type: string
+          example: 2024-10-04T00:00Z
+        - name: dataHoraFim
+          in: query
+          schema:
+            type: string
+          example: 2024-10-04T23:00Z
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /cobranca/v3/cobrancas/{codigoSolicitacao}/pagar:
+    post:
+      tags:
+        - SANDBOX > SANDBOX - API Cobranca (Boleto com Pix) > Cobranças
+      summary: Pagar cobrança
+      requestBody:
+        content: {}
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: x-conta-corrente
+          in: header
+          schema:
+            type: string
+          example: '{{x-conta-corrente}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: codigoSolicitacao
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /oauth/v2/token:
+    post:
+      tags:
+        - default
+      summary: Gera-token-certificado_SANDBOX
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                client_id:
+                  type: string
+                  example: '{{clientId_SANDBOX}}'
+                client_secret:
+                  type: string
+                  example: '{{clientSecret_SANDBOX}}'
+                scope:
+                  type: string
+                  description: ' '
+                  example: >
+                    cob.write cob.read cobv.write cobv.read lotecobv.write
+                    lotecobv.read pix.write pix.read webhook.write webhook.read
+                    payloadlocation.write payloadlocation.read
+                    boleto-cobranca.read boleto-cobranca.write extrato.read
+                    pagamento-pix.write pagamento-pix.read extrato-usend.read
+                    pagamento-boleto.read pagamento-boleto.write
+                    pagamento-darf.write pagamento-lote.write
+                    pagamento-lote.read webhook-banking.read
+                    webhook-banking.write pagamento-pix.read
+                grant_type:
+                  type: string
+                  example: client_credentials
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
