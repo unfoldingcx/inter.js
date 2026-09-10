@@ -1,11 +1,90 @@
 {
   "name": "inter.js",
-  "module": "src/index.ts",
+  "version": "1.0.0",
+  "description": "TypeScript SDK for the Banco Inter partner APIs: Cobran\u00e7a (Boleto com Pix), Banking, Pix and Pix Autom\u00e1tico. mTLS, OAuth scopes, retries, rate limiting and typed webhooks included.",
   "type": "module",
+  "license": "MIT",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18.17"
+  },
+  "keywords": [
+    "banco-inter",
+    "inter",
+    "pix",
+    "boleto",
+    "bolepix",
+    "pix-automatico",
+    "open-banking",
+    "brazil",
+    "fintech",
+    "mtls",
+    "typescript",
+    "sdk"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "bun": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/index.js"
+    },
+    "./webhooks": {
+      "types": "./dist/webhooks/index.d.ts",
+      "bun": "./src/webhooks/index.ts",
+      "import": "./dist/webhooks/index.js",
+      "require": "./dist/cjs/webhooks/index.js",
+      "default": "./dist/webhooks/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "bun": "./src/utils/index.ts",
+      "import": "./dist/utils/index.js",
+      "require": "./dist/cjs/utils/index.js",
+      "default": "./dist/utils/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "bun": "./src/testing.ts",
+      "import": "./dist/testing.js",
+      "require": "./dist/cjs/testing.js",
+      "default": "./dist/testing.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "specs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun run clean && bun run build:esm && bun run build:cjs && bun run build:types",
+    "build:esm": "bun build src/index.ts src/webhooks/index.ts src/utils/index.ts src/testing.ts --outdir dist --root src --target node --format esm --splitting --sourcemap=linked",
+    "build:cjs": "bun build src/index.ts src/webhooks/index.ts src/utils/index.ts src/testing.ts --outdir dist/cjs --root src --target node --format cjs --sourcemap=linked && printf '{\"type\":\"commonjs\"}\\n' > dist/cjs/package.json",
+    "build:types": "tsc -p tsconfig.build.json && bun run scripts/fix-dts.ts dist",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "specs:fetch": "bun run scripts/fetch-specs.ts",
+    "generate": "bun run scripts/generate.ts",
+    "prepublishOnly": "bun run typecheck && bun test && bun run build"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^7"
+    "typescript": "^5.7.0 || ^7"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   }
 }
