@@ -17,8 +17,11 @@
  * @see https://developers.inter.co/references/pix
  */
 
-import { Resource } from "../../core/resource.ts";
-import type { ResourceTransport } from "../../core/resource.ts";
+import { PIX_ENDPOINTS } from "../../generated/endpoints.ts";
+import type { MakePaymentCobCobv, MakePaymentCobCobvResponse } from "../../generated/pix.ts";
+import { INTER_BASE_PATHS } from "../../config.ts";
+import { Resource, requestOverrides } from "../../core/resource.ts";
+import type { RequestOptions, ResourceTransport } from "../../core/resource.ts";
 import { PixCobResource } from "./cob.ts";
 import { PixCobvResource } from "./cobv.ts";
 import { PixLocResource } from "./loc.ts";
@@ -62,5 +65,30 @@ export class PixResource extends Resource {
     this.loc = new PixLocResource(client);
     this.received = new PixReceivedResource(client);
     this.webhook = new PixWebhookResource(client);
+  }
+
+  /**
+   * Simulates a payer scanning a QR code and paying the charge behind it.
+   * **Sandbox only.**
+   *
+   * Works for both `cob` and `cobv`: paste the `pixCopiaECola` the charge
+   * returned and the amount to pay. The response carries the end-to-end id the
+   * payment was assigned, which is what `pix.received.get()` takes.
+   *
+   * @example
+   * ```ts
+   * const cob = await inter.pix.cob.create({ ... });
+   * const { endToEnd } = await inter.pix.payQrCode({ qrCode: cob.pixCopiaECola!, valor: 149.9 });
+   * const received = await inter.pix.received.get(endToEnd);
+   * ```
+   */
+  async payQrCode(body: MakePaymentCobCobv, options?: RequestOptions): Promise<MakePaymentCobCobvResponse> {
+    return await this.client.call<MakePaymentCobCobvResponse>({
+      endpoint: PIX_ENDPOINTS.makePaymentCobCobv,
+      api: "pix",
+      basePath: INTER_BASE_PATHS.pix,
+      body,
+      ...requestOverrides(options),
+    });
   }
 }

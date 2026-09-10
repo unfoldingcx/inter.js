@@ -87,3 +87,22 @@ describe("endpoint metadata", () => {
     expect(INTER_ENDPOINTS.token.token.path).toBe("/token");
   });
 });
+
+describe("endpoint coverage", () => {
+  test("every documented operation is reachable from a resource method", async () => {
+    const files = await Array.fromAsync(new Bun.Glob("src/resources/**/*.ts").scan("."));
+    const sources = (await Promise.all(files.map((f) => Bun.file(f).text()))).join("\n");
+
+    const uncovered: string[] = [];
+    for (const [api, endpoints] of Object.entries(INTER_ENDPOINTS)) {
+      // The token endpoint is driven by TokenManager rather than a resource.
+      if (api === "token") continue;
+      const constName = api === "pixAutomatico" ? "PIX_AUTOMATICO_ENDPOINTS" : `${api.toUpperCase()}_ENDPOINTS`;
+      for (const key of Object.keys(endpoints as Record<string, unknown>)) {
+        if (!sources.includes(`${constName}.${key}`)) uncovered.push(`${api}.${key}`);
+      }
+    }
+
+    expect(uncovered, `these endpoints have no resource method:\n  ${uncovered.join("\n  ")}`).toEqual([]);
+  });
+});

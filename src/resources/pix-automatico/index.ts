@@ -22,8 +22,11 @@
  * @see https://developers.inter.co/references/pix-automatico
  */
 
-import { Resource } from "../../core/resource.ts";
-import type { ResourceTransport } from "../../core/resource.ts";
+import { PIX_AUTOMATICO_ENDPOINTS } from "../../generated/endpoints.ts";
+import type { MakePaymentCobCobv, MakePaymentCobCobvResponse } from "../../generated/pix-automatico.ts";
+import { INTER_BASE_PATHS } from "../../config.ts";
+import { Resource, requestOverrides } from "../../core/resource.ts";
+import type { RequestOptions, ResourceTransport } from "../../core/resource.ts";
 import { PixAutomaticoRecResource } from "./rec.ts";
 import { PixAutomaticoSolicRecResource } from "./solicrec.ts";
 import { PixAutomaticoCobrResource } from "./cobr.ts";
@@ -59,5 +62,22 @@ export class PixAutomaticoResource extends Resource {
     this.cobr = new PixAutomaticoCobrResource(client);
     this.locRec = new PixAutomaticoLocRecResource(client);
     this.webhooks = new PixAutomaticoWebhookResource(client);
+  }
+
+  /**
+   * Simulates a payer scanning a recurrence QR code, which both settles the
+   * linked charge and authorises the mandate. **Sandbox only.**
+   *
+   * This is the shortcut past the manual approval step, so an automated test
+   * can drive a recurrence all the way to `APROVADA`.
+   */
+  async payQrCode(body: MakePaymentCobCobv, options?: RequestOptions): Promise<MakePaymentCobCobvResponse> {
+    return await this.client.call<MakePaymentCobCobvResponse>({
+      endpoint: PIX_AUTOMATICO_ENDPOINTS.makePaymentCobCobv,
+      api: "pixAutomatico",
+      basePath: INTER_BASE_PATHS.pixAutomatico,
+      body,
+      ...requestOverrides(options),
+    });
   }
 }

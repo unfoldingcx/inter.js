@@ -1,8 +1,8 @@
 # inter.js
 
-A TypeScript SDK for **Banco Inter's** partner APIs. Covers all four public APIs, handles the
-mutual-TLS handshake and OAuth token lifecycle for you, and ships request and response types
-generated from Inter's own OpenAPI documents.
+A TypeScript SDK for **Banco Inter's** partner APIs. Covers all 91 documented operations across the four
+public APIs, handles the mutual-TLS handshake and OAuth token lifecycle for you, and ships
+request and response types generated from Inter's own OpenAPI documents.
 
 Runs on Node 18.17+, Bun and Deno. No runtime dependencies.
 
@@ -494,6 +494,7 @@ For end-to-end work, Inter's sandbox mirrors production at
 
 ```ts
 await inter.pix.cob.simulatePayment(txid, { valor: "10.00" });
+await inter.pix.payQrCode({ qrCode: cob.pixCopiaECola!, valor: 149.9 });
 await inter.cobranca.simulatePayment(codigoSolicitacao, { valorPago: 149.9 });
 ```
 
@@ -571,7 +572,7 @@ sits on top and is where behaviour lives.
 | Pix recebidos | `pix.received.get()` / `.list()` / `.listPaginated()` |
 | Devolução | `pix.received.refund()` / `.getRefund()` |
 | Webhook | `pix.webhook.set()` / `.get()` / `.delete()` / `.callbacks()` / `.retryCallbacks()` |
-| Pagar cobrança (sandbox) | `pix.cob.simulatePayment()` / `pix.cobv.simulatePayment()` |
+| Pagar cobrança (sandbox) | `pix.cob.simulatePayment()` / `pix.cobv.simulatePayment()` / `pix.payQrCode()` |
 
 </details>
 
@@ -585,7 +586,7 @@ sits on top and is where behaviour lives.
 | Cobrança recorrente | `pixAutomatico.cobr.create()` / `.createWithTxid()` / `.get()` / `.update()` / `.cancel()` / `.retry()` / `.list()` |
 | Location de recorrência | `pixAutomatico.locRec.create()` / `.get()` / `.list()` / `.unlinkRec()` |
 | Webhooks | `pixAutomatico.webhooks.setRec()` / `.setCobr()` / `.getRec()` / `.getCobr()` / `.deleteRec()` / `.deleteCobr()` |
-| Simulações (sandbox) | `.simulateStatusChange()` / `.simulatePayment()` |
+| Simulações (sandbox) | `.simulateStatusChange()` / `.simulatePayment()` / `pixAutomatico.payQrCode()` |
 
 </details>
 
