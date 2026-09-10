@@ -80,7 +80,7 @@ export class PixReceivedResource extends Resource {
         { ...query, "paginacao.paginaAtual": page },
         { ...options, signal: signal ?? options?.signal },
       );
-      return pixPage(body, (body.pix ?? []) as Pix[], page);
+      return pixPage(body, body.pix ?? [], page);
     }, options);
   }
 

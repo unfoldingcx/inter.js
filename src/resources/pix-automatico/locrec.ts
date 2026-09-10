@@ -77,7 +77,7 @@ export class PixAutomaticoLocRecResource extends Resource {
         { ...query, "paginacao.paginaAtual": page },
         { ...options, signal: signal ?? options?.signal },
       );
-      return pixPage(body, (body.loc ?? []) as PayloadLocationRecCompleta[], page);
+      return pixPage(body, body.loc ?? [], page);
     }, options);
   }
 

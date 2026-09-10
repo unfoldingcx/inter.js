@@ -93,7 +93,7 @@ export class PixAutomaticoCobrResource extends Resource {
 
   /** Cancels a recurring charge before it settles. */
   async cancel(txid: string, options?: RequestOptions): Promise<CobRGerada> {
-    return await this.update(txid, { status: "CANCELADA" } as CobRRevisada, options);
+    return await this.update(txid, { status: "CANCELADA" }, options);
   }
 
   /**
@@ -129,7 +129,7 @@ export class PixAutomaticoCobrResource extends Resource {
         { ...query, "paginacao.paginaAtual": page },
         { ...options, signal: signal ?? options?.signal },
       );
-      return pixPage(body, (body.cobsr ?? []) as CobRCompleta[], page);
+      return pixPage(body, body.cobsr ?? [], page);
     }, options);
   }
 

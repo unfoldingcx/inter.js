@@ -124,7 +124,7 @@ export class PixCobResource extends Resource {
    * Shorthand for {@link update} with `status: "REMOVIDA_PELO_USUARIO_RECEBEDOR"`.
    */
   async cancel(txid: string, options?: RequestOptions): Promise<CobGerada> {
-    return await this.update(txid, { status: "REMOVIDA_PELO_USUARIO_RECEBEDOR" } as CobRevisada, options);
+    return await this.update(txid, { status: "REMOVIDA_PELO_USUARIO_RECEBEDOR" }, options);
   }
 
   /** Searches charges created inside a time window. */
@@ -145,7 +145,7 @@ export class PixCobResource extends Resource {
         { ...query, "paginacao.paginaAtual": page },
         { ...options, signal: signal ?? options?.signal },
       );
-      return pixPage(body, (body.cobs ?? []) as CobCompleta[], page);
+      return pixPage(body, body.cobs ?? [], page);
     }, options);
   }
 

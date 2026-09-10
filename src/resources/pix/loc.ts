@@ -80,7 +80,7 @@ export class PixLocResource extends Resource {
         { ...query, "paginacao.paginaAtual": page },
         { ...options, signal: signal ?? options?.signal },
       );
-      return pixPage(body, (body.loc ?? []) as PayloadLocationCompleta[], page);
+      return pixPage(body, body.loc ?? [], page);
     }, options);
   }
 

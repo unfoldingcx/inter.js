@@ -13,6 +13,7 @@ import { PIX_AUTOMATICO_ENDPOINTS } from "../../generated/endpoints.ts";
 import type {
   ChangeStatusRec,
   RecCompleta,
+  RecCompletaPesquisada,
   RecGerada,
   RecGetQuery,
   RecRevisada,
@@ -85,7 +86,7 @@ export class PixAutomaticoRecResource extends Resource {
 
   /** Cancels a recurrence, ending the mandate. */
   async cancel(idRec: string, options?: RequestOptions): Promise<RecGerada> {
-    return await this.update(idRec, { status: "CANCELADA" } as RecRevisada, options);
+    return await this.update(idRec, { status: "CANCELADA" }, options);
   }
 
   /** Searches recurrences created in a window. */
@@ -99,14 +100,19 @@ export class PixAutomaticoRecResource extends Resource {
     });
   }
 
-  /** Iterates every recurrence in the window. */
-  listPaginated(query: RecListQuery, options?: RequestOptions & PaginateOptions): Paginator<RecCompleta> {
-    return new Paginator<RecCompleta>(async (page, signal) => {
+  /**
+   * Iterates every recurrence in the window.
+   *
+   * Search results use the slimmer `RecCompletaPesquisada` shape; call
+   * {@link get} on an `idRec` when you need the full record.
+   */
+  listPaginated(query: RecListQuery, options?: RequestOptions & PaginateOptions): Paginator<RecCompletaPesquisada> {
+    return new Paginator<RecCompletaPesquisada>(async (page, signal) => {
       const body = await this.list(
         { ...query, "paginacao.paginaAtual": page },
         { ...options, signal: signal ?? options?.signal },
       );
-      return pixPage(body, (body.recs ?? []) as RecCompleta[], page);
+      return pixPage(body, body.recs ?? [], page);
     }, options);
   }
 

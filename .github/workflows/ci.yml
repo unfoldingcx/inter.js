@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Typecheck
+        run: bun run typecheck
+      - name: Test
+        run: bun test
+      - name: Build
+        run: bun run build
+
+  node:
+    name: node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["18.17", "20", "22", "24"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - name: Import the built package under Node
+        run: |
+          node -e "import('./dist/index.js').then(m => {
+            if (typeof m.InterClient !== 'function') throw new Error('missing InterClient');
+            if (!m.isValidCPF('52998224725')) throw new Error('utils broken');
+            console.log('ESM ok');
+          })"
+          node -e "
+            const m = require('./dist/cjs/index.js');
+            if (typeof m.InterClient !== 'function') throw new Error('missing InterClient');
+            if (!m.parseBoleto('00190500954014481606906809350314337370000000100').valid) throw new Error('utils broken');
+            console.log('CJS ok');
+          "
+
+  specs:
+    name: generated layer is in sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Regenerate from the committed specs
+        run: bun run generate
+      - name: Fail if the output differs from what is committed
+        run: |
+          if ! git diff --quiet -- src/generated; then
+            echo "src/generated is out of date. Run 'bun run generate' and commit the result."
+            git --no-pager diff --stat -- src/generated
+            exit 1
+          fi

@@ -91,7 +91,7 @@ export class PixCobvResource extends Resource {
 
   /** Cancels a due-date charge so it can no longer be paid. */
   async cancel(txid: string, options?: RequestOptions): Promise<CobVGerada> {
-    return await this.update(txid, { status: "REMOVIDA_PELO_USUARIO_RECEBEDOR" } as CobVRevisada, options);
+    return await this.update(txid, { status: "REMOVIDA_PELO_USUARIO_RECEBEDOR" }, options);
   }
 
   /** Searches due-date charges in a window. `loteCobVId` narrows to one batch. */
@@ -112,7 +112,7 @@ export class PixCobvResource extends Resource {
         { ...query, "paginacao.paginaAtual": page },
         { ...options, signal: signal ?? options?.signal },
       );
-      return pixPage(body, (body.cobs ?? []) as CobVCompleta[], page);
+      return pixPage(body, body.cobs ?? [], page);
     }, options);
   }
 

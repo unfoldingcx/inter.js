@@ -128,7 +128,7 @@ export class PixLoteCobvResource extends Resource {
         { ...query, "paginacao.paginaAtual": page },
         { ...options, signal: signal ?? options?.signal },
       );
-      return pixPage(body, (body.lotes ?? []) as LoteCobVConsultado[], page);
+      return pixPage(body, body.lotes ?? [], page);
     }, options);
   }
 }
