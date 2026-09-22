@@ -1,9 +1,14 @@
 {
   "name": "@unfoldingcx/inter.js",
   "version": "1.0.0",
-  "description": "TypeScript SDK for the Banco Inter partner APIs: Cobran\u00e7a (Boleto com Pix), Banking, Pix and Pix Autom\u00e1tico. mTLS, OAuth scopes, retries, rate limiting and typed webhooks included.",
+  "description": "TypeScript SDK for the Banco Inter partner APIs: Cobrança (Boleto com Pix), Banking, Pix and Pix Automático. mTLS, OAuth scopes, retries, rate limiting and typed webhooks included.",
   "type": "module",
   "license": "MIT",
+  "publishConfig": {
+    "@unfoldingcx:registry": "https://registry.npmjs.org/",
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "sideEffects": false,
   "engines": {
     "node": ">=18.17"
