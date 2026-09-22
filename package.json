@@ -1,5 +1,5 @@
 {
-  "name": "inter.js",
+  "name": "@unfoldingcx/inter.js",
   "version": "1.0.0",
   "description": "TypeScript SDK for the Banco Inter partner APIs: Cobran\u00e7a (Boleto com Pix), Banking, Pix and Pix Autom\u00e1tico. mTLS, OAuth scopes, retries, rate limiting and typed webhooks included.",
   "type": "module",
