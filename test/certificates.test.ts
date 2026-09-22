@@ -32,8 +32,12 @@ describe("inspectCertificate", () => {
   });
 
   test("counts down to expiry", () => {
-    const info = inspectCertificate(CERT_SOON);
+    // Evaluate against a clock just inside the fixture's window, so the test
+    // does not depend on when it runs.
+    const reference = new Date(inspectCertificate(CERT_SOON)!.notAfter.getTime() - 2 * 86_400_000);
+    const info = inspectCertificate(CERT_SOON, reference);
     expect(info!.daysUntilExpiry).toBeLessThanOrEqual(5);
+    expect(info!.daysUntilExpiry).toBeGreaterThanOrEqual(1);
     expect(info!.expired).toBe(false);
   });
 
@@ -51,12 +55,15 @@ describe("inspectCertificate", () => {
 describe("client certificate warnings", () => {
   test("warns when the certificate is close to expiring", async () => {
     const { logger, records } = recordingLogger();
+    // A ten-year certificate with a threshold wider than that: the warning
+    // fires today and keeps firing no matter when the suite runs.
     const inter = new InterClient({
       clientId: "a",
       clientSecret: "b",
-      certificate: CERT_SOON,
+      certificate: CERT_LONG,
       privateKey: "-----BEGIN PRIVATE KEY-----\nAA\n-----END PRIVATE KEY-----",
       transport: new MockTransport(),
+      certificateExpiryWarningDays: 20 * 365,
       logger,
     });
 
@@ -64,7 +71,7 @@ describe("client certificate warnings", () => {
 
     const warning = records.find((r) => r.level === "warn");
     expect(warning?.message).toContain("expires soon");
-    expect(warning?.fields?.daysUntilExpiry).toBeLessThanOrEqual(5);
+    expect(warning?.fields?.daysUntilExpiry).toBeLessThanOrEqual(20 * 365);
     expect(inter.certificate?.expired).toBe(false);
   });
 
